@@ -24,6 +24,7 @@ public class TokenService {
     public String generateJwt(Authentication auth){
 
         Instant now = Instant.now();
+        //hello world
 
         String scope = auth.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
