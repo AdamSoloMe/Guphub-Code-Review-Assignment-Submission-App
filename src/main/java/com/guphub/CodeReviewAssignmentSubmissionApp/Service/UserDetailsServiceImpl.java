@@ -38,4 +38,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //
 //        return new User(1L,"Adam",passwordEncoder.encode("password"),roles);
     }
+
 }
