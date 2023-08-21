@@ -2,7 +2,6 @@ package com.guphub.CodeReviewAssignmentSubmissionApp.Dto;
 
 import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.User;
 
-
 public class LoginResponseDTO {
     private User user;
     private String jwt;
