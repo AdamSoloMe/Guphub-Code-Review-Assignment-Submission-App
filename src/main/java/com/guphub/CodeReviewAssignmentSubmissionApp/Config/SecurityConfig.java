@@ -33,9 +33,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private final RSAKeyProperties keyProperties;
+
+
     public SecurityConfig(RSAKeyProperties keyProperties) {
         this.keyProperties = keyProperties;
     }
+
+
 
     @Bean
     public PasswordEncoder passwordEncoder(){
