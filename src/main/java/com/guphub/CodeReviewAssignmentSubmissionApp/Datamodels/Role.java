@@ -1,31 +1,33 @@
 package com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels;
 
 
+
+import com.guphub.CodeReviewAssignmentSubmissionApp.enums.AuthorityEnum;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
-
 @Entity
-@Table(name="roles")
+@Table(name = "roles")
 public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
     private Long id;
-    private String authority;
 
+    @Enumerated(EnumType.STRING)
+    private AuthorityEnum authority;
 
-    public Role(){
+    public Role() {
         super();
     }
 
-    public Role(String authority){
-        this.authority=authority;
+    public Role(AuthorityEnum authority) {
+        this.authority = authority;
     }
 
-    public Role(Long role_id, String authority) {
-        this.id = role_id;
+    public Role(Long roleId, AuthorityEnum authority) {
+        this.id = roleId;
         this.authority = authority;
     }
 
@@ -39,12 +41,14 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
+        return authority.name(); // Use the name of the enum as the authority
+    }
+
+    public AuthorityEnum getAuthorityEnum() {
         return authority;
     }
 
-    public void setAuthority(String authority) {
+    public void setAuthorityEnum(AuthorityEnum authority) {
         this.authority = authority;
     }
-
-
 }
