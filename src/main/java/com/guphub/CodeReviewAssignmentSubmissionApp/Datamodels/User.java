@@ -25,16 +25,20 @@ public class User implements UserDetails {
    @JsonIgnore
     private String password;
 
+    public User(String admin, String password, Set<Role> roles) {
+        this.username=admin;
+        this.password=admin;
+        this.authorities=roles;
+    }
+
     public void setAuthorities(Set<Role> authorities) {
         this.authorities = authorities;
     }
 
-    //    @Enumerated(EnumType.STRING)
-//    private Role role;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name="user_role_junction",
-        joinColumns = {@JoinColumn(name = "userr_id")},
+        joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
 
     )
