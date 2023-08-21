@@ -3,6 +3,7 @@ package com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,6 +12,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "users")
+@Builder
 public class User implements UserDetails {
 
 
@@ -63,6 +65,13 @@ public class User implements UserDetails {
     public User(Long id, String username, String password, Set<Role> authorities) {
         super();
         this.id = id;
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
+    public User(LocalDate cohortStartDate, String username, String password, Set<Role> authorities) {
+        this.cohortStartDate = cohortStartDate;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
