@@ -30,11 +30,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final RSAKeyProperties keyProperties;
-
     public SecurityConfig(RSAKeyProperties keyProperties) {
         this.keyProperties = keyProperties;
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder(){
