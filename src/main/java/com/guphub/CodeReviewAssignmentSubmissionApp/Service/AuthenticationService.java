@@ -2,18 +2,19 @@ package com.guphub.CodeReviewAssignmentSubmissionApp.Service;
 
 import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.Role;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.User;
+import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.AuthResponseDTO;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.LoginResponseDTO;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.RegisterResponse;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.UserDto;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Repository.RoleRepository;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Repository.UserRepository;
-import com.guphub.CodeReviewAssignmentSubmissionApp.enums.AuthorityEnum;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class AuthenticationService {
 
     public RegisterResponse registeredUser(UserDto userDto){
         String encodedPassword = passwordEncoder.encode(userDto.getPassword());
-        Role userRole = roleRepository.findRoleByAuthority(AuthorityEnum.ROLE_STUDENT);
+        Role userRole = roleRepository.findRoleByAuthority("USER").get();
 
         Set<Role> authorities = new HashSet<>();
         authorities.add(userRole);
@@ -54,15 +55,17 @@ public class AuthenticationService {
                 .build();
         userRepository.save(newUser);
         String jwtToken =tokenService.generateToken(newUser);
+        String jwtRefreshToken=tokenService.generateRefreshToken(newUser);
         return RegisterResponse
                 .builder()
-                .jwtToken(jwtToken)
+                .accessToken(jwtToken)
+                .refreshToken(jwtRefreshToken)
                 .build();
 
     }
 
 
-    public LoginResponseDTO loginUser(UserDto userDto){
+    public AuthResponseDTO loginUser(LoginResponseDTO userDto){
 
         try{
             Authentication auth = authenticationManager.authenticate(
@@ -72,12 +75,13 @@ public class AuthenticationService {
                     )
             );
 
-            String jwtToken =tokenService.generateToken((UserDetails) auth);
-
-            return new LoginResponseDTO(userRepository.findByUsername(userDto.getUsername()).get(), jwtToken);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+            String jwtToken=tokenService.generateToken((UserDetails) auth);
+            return new AuthResponseDTO(jwtToken);
 
         } catch(AuthenticationException e){
-            return new LoginResponseDTO(null, "");
+            return new AuthResponseDTO(null);
         }
     }
+
 }

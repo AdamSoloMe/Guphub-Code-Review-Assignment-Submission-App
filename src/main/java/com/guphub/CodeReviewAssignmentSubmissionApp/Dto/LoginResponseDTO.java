@@ -4,32 +4,30 @@ import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.User;
 
 
 public class LoginResponseDTO {
-    private User user;
-    private String jwt;
+    private String username;
+    private String password;
 
-    public LoginResponseDTO(){
-        super();
+    public LoginResponseDTO(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
-    public LoginResponseDTO(User user, String jwt){
-        this.user = user;
-        this.jwt = jwt;
+    public LoginResponseDTO() {
     }
 
-    public User getUser(){
-        return this.user;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUser(User user){
-        this.user = user;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getJwt(){
-        return this.jwt;
+    public String getPassword() {
+        return password;
     }
 
-    public void setJwt(String jwt){
-        this.jwt = jwt;
+    public void setPassword(String password) {
+        this.password = password;
     }
-
 }

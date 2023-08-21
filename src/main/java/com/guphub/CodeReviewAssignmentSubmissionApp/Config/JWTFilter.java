@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,10 +26,13 @@ import java.io.IOException;
 public class JWTFilter extends OncePerRequestFilter {
 
 
+    @Autowired
 
-    private JWTService jwtValidationService;
+    private final JWTService jwtValidationService;
 
-    private UserDetailsServiceImpl userDetailsService;
+    @Autowired
+
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -47,7 +51,7 @@ public class JWTFilter extends OncePerRequestFilter {
         userName= jwtValidationService.extractUsername(jwt);
         if(userName !=null && SecurityContextHolder.getContext().getAuthentication()==null) {
             // Get user identity and set it on the spring security context
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
             if (jwtValidationService.isTokenValid(jwt,userDetails)){
                 UsernamePasswordAuthenticationToken authenticationToken= new UsernamePasswordAuthenticationToken(
                         userDetails,

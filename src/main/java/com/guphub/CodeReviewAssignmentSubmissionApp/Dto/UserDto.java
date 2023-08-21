@@ -1,6 +1,7 @@
 package com.guphub.CodeReviewAssignmentSubmissionApp.Dto;
 
 
+import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

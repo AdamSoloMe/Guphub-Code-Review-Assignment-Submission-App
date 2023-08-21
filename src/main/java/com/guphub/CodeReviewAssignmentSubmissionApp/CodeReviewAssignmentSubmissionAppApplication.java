@@ -1,17 +1,12 @@
 package com.guphub.CodeReviewAssignmentSubmissionApp;
 
 import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.Role;
-import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.User;
-import com.guphub.CodeReviewAssignmentSubmissionApp.Repository.RoleRepository;
-import com.guphub.CodeReviewAssignmentSubmissionApp.Repository.UserRepository;
+import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.UserDto;
+import com.guphub.CodeReviewAssignmentSubmissionApp.Service.AuthenticationService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @SpringBootApplication
 public class CodeReviewAssignmentSubmissionAppApplication {
@@ -21,18 +16,16 @@ public class CodeReviewAssignmentSubmissionAppApplication {
 	}
 
 //	@Bean
-//	 CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncode){
-//		return args ->{
-//			if(roleRepository.findRoleByAuthority("ADMIN").isPresent()) return;
-//			Role adminRole = roleRepository.save(new Role("ADMIN"));
-//			roleRepository.save(new Role("USER"));
+//	public CommandLineRunner createDefaultUser(AuthenticationService authenticationService) {
+//		return args -> {
+//			// Create a default user
+//			UserDto defaultUser = UserDto.builder()
+//					.username("defaultUser")
+//					.password("defaultPassword")
+//					.role(Role.builder().authority(AuthorityEnum.ADMIN).build()) // Change this to the appropriate default role
+//					.build();
 //
-//			Set<Role> roles = new HashSet<>();
-//			roles.add(adminRole);
-//
-//			User admin = new User(1L, "admin", passwordEncode.encode("password"), roles);
-//
-//			userRepository.save(admin);
+//			System.out.println("Admin token: "+authenticationService.registeredUser(defaultUser).getAccessToken());
 //		};
 //	}
 

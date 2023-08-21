@@ -4,6 +4,7 @@ package com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -27,20 +28,24 @@ public class User implements UserDetails {
    @JsonIgnore
     private String password;
 
-    public void setAuthorities(Set<Role> authorities) {
-        this.authorities = authorities;
-    }
 
-    //    @Enumerated(EnumType.STRING)
-//    private Role role;
-    @ManyToMany(fetch = FetchType.EAGER)
+
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinTable(
-        name="user_role_junction",
-        joinColumns = {@JoinColumn(name = "user_id")},
+        name="user_role_junction", joinColumns = {@JoinColumn(name = "User_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
 
     )
     private Set<Role>  authorities;
+    public void setAuthorities(Set<Role> authorities) {
+        this.authorities = authorities;
+    }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        //Authories are roles
+        // return List.of(new SimpleGrantedAuthority(role.name()));
+        return this.authorities;
+    }
 
     public  User(){
         super();
@@ -63,6 +68,14 @@ public class User implements UserDetails {
         this.password = password;
         this.authorities = authorities;
     }
+
+    public User( String username, String password, Set<Role> authorities) {
+        super();
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
 
     public User(LocalDate cohortStartDate, String username, String password, Set<Role> authorities) {
         this.cohortStartDate = cohortStartDate;
@@ -124,12 +137,7 @@ public class User implements UserDetails {
     }
 
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        //Authories are roles
-       // return List.of(new SimpleGrantedAuthority(role.name()));
-        return this.authorities;
-    }
+
 
 
 }
