@@ -27,6 +27,12 @@ public class User implements UserDetails {
    @JsonIgnore
     private String password;
 
+    public User(String admin, String password, Set<Role> roles) {
+        this.username=admin;
+        this.password=password;
+        this.authorities=roles;
+    }
+
     public void setAuthorities(Set<Role> authorities) {
         this.authorities = authorities;
     }
