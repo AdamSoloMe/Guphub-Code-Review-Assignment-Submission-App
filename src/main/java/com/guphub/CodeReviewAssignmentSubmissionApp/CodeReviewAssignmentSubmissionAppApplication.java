@@ -30,7 +30,7 @@ public class CodeReviewAssignmentSubmissionAppApplication {
 			Set<Role> roles = new HashSet<>();
 			roles.add(adminRole);
 
-			User admin = new User( "admin", passwordEncode.encode("password"), roles);
+			User admin = new User(1L, "admin", passwordEncode.encode("password"), roles);
 
 			userRepository.save(admin);
 		};
