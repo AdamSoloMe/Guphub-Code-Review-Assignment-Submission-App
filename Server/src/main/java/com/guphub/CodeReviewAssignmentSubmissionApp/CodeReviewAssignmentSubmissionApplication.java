@@ -14,10 +14,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @SpringBootApplication
-public class CodeReviewAssignmentSubmissionApplication {
+public class CodeReviewAssignmentSubmissionAppApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CodeReviewAssignmentSubmissionApplication.class, args);
+		SpringApplication.run(CodeReviewAssignmentSubmissionAppApplication.class, args);
 	}
 
 	@Bean
