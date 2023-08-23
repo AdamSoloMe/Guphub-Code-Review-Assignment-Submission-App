@@ -4,15 +4,15 @@ import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.User;
 
 public class LoginResponseDTO {
     private User user;
-    private String jwt;
+    private String access_token;
 
     public LoginResponseDTO(){
         super();
     }
 
-    public LoginResponseDTO(User user, String jwt){
+    public LoginResponseDTO(User user, String access_token){
         this.user = user;
-        this.jwt = jwt;
+        this.access_token = access_token;
     }
 
     public User getUser(){
@@ -23,12 +23,12 @@ public class LoginResponseDTO {
         this.user = user;
     }
 
-    public String getJwt(){
-        return this.jwt;
+    public String getAccess_token(){
+        return this.access_token;
     }
 
-    public void setJwt(String jwt){
-        this.jwt = jwt;
+    public void setAccess_token(String jwt){
+        this.access_token = jwt;
     }
 
 }
