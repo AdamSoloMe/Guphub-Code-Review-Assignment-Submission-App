@@ -69,16 +69,26 @@ public class AuthenticationService {
 
                 // Check if the refresh token is expired
                 if (!tokenService.isRefreshTokenValid(refreshToken)) {
-                    // If expired, generate a new refresh token
+                    // Clear the expired tokens and generate new ones
+                    accessTokenMap.remove(username);
+                    refreshTokenMap.remove(username);
+                    accessToken = tokenService.generateJwt(auth);
                     refreshToken = tokenService.refreshJwt(accessToken);
-                    refreshTokenMap.put(username, refreshToken); // Update the refresh token
+                    accessTokenMap.put(username, accessToken);
+                    refreshTokenMap.put(username, refreshToken);
                 }
+//                 else if ( (tokenService.isRefreshTokenValid(refreshToken)))
+//                {
+//                    // Refresh the access token using the existing refresh token
+//                    accessToken = tokenService.refreshJwt(refreshToken);
+//                    accessTokenMap.put(username, accessToken);
+//                }
             } else {
                 // Otherwise, generate a new access token and refresh token
                 accessToken = tokenService.generateJwt(auth);
-                refreshToken = tokenService.refreshJwt(accessToken); // Generate refresh token
-                accessTokenMap.put(username, accessToken); // Store the access token
-                refreshTokenMap.put(username, refreshToken); // Store the refresh token
+                refreshToken = tokenService.refreshJwt(accessToken);
+                accessTokenMap.put(username, accessToken);
+                refreshTokenMap.put(username, refreshToken);
             }
 
             return new LoginResponseDTO(userRepository.findByUsername(username).get(), accessToken, refreshToken);
@@ -88,9 +98,13 @@ public class AuthenticationService {
         }
     }
 
-
     public String refreshAccessToken(String refreshToken) {
         try {
+            // Check if the refresh token is expired
+            if (!tokenService.isRefreshTokenValid(refreshToken)) {
+                return null; // Expired refresh token
+            }
+
             return tokenService.refreshJwt(refreshToken);
         } catch (Exception e) {
             // Handle token refresh error

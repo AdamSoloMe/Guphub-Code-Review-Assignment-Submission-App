@@ -32,7 +32,7 @@ public class TokenService {
                 .issuedAt(now)
                 .subject(auth.getName())
                 .claim("roles", scope)
-                .expiresAt(now.plus(10, ChronoUnit.SECONDS))
+                .expiresAt(now.plus(15, ChronoUnit.MINUTES))
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
@@ -48,7 +48,7 @@ public class TokenService {
                     .issuedAt(now)
                     .subject(decodedRefreshToken.getSubject())
                     .claim("roles", decodedRefreshToken.getClaimAsString("roles"))
-                    .expiresAt(now.plus(1, ChronoUnit.MINUTES)) // Refresh token's expiration time
+                    .expiresAt(now.plus(7, ChronoUnit.DAYS)) // Refresh token's expiration time
                     .build();
 
             return jwtEncoder.encode(JwtEncoderParameters.from(refreshedClaims)).getTokenValue();
