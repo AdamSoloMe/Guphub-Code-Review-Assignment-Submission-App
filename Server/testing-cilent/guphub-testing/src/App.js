@@ -1,31 +1,14 @@
-import logo from './logo.svg';
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+import { useLocalState } from './utils/useLocalStorage';
 
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [refreshToken, setRefreshToken] = useState('');
-  const [accessToken, setAccessToken] = useState('');
-
-  useEffect(() => {
-    fetchTokens(); // Fetch tokens on component mount
-  }, [accessToken]);
-
-  const fetchTokens = async () => {
-    try {
-      const response = await axios.post('/api/auth/login', {
-        username: 'your_username',
-        password: 'your_password',
-      });
-
-      //setRefreshToken(response.data.refresh_token);
-      setAccessToken(response.data.access_token);
-    } catch (error) {
-      console.error('Error fetching tokens:', error);
-    }
-  };
+  const [accessToken, setAccessToken] = useLocalState('', 'access_token');
+  const [refreshToken, setRefreshToken] = useLocalState('', 'refresh_token'); // Add this line
+  const [loginPerformed, setLoginPerformed] = useState(false); // Track login state
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -36,8 +19,10 @@ function App() {
         password: password,
       });
 
-      setRefreshToken(response.data.refresh_token);
       setAccessToken(response.data.access_token);
+      setRefreshToken(response.data.refresh_token); // Set the refresh token
+      setLoginPerformed(true); // Mark login as performed
+
     } catch (error) {
       console.error('Login error:', error);
     }
@@ -61,7 +46,7 @@ function App() {
   const handleRefresh = async () => {
     try {
       const response = await axios.post('/api/auth/refresh', {
-        refresh_token: refreshToken,
+        refresh_token: refreshToken, // Use the stored refresh token for refreshing
       });
 
       setAccessToken(response.data); // New access token
@@ -104,13 +89,13 @@ function App() {
         />
         <button type="submit">Register</button>
       </form>
-      <button onClick={handleRefresh} disabled={!refreshToken}>
+      <button onClick={handleRefresh} disabled={!accessToken}>
         Refresh Token
       </button>
       <div>
-        Access Token: {accessToken}
-        <br />
-        Refresh Token: {refreshToken}
+          Access Token: {accessToken}
+          <br />
+          Refresh Token: {refreshToken}
       </div>
     </div>
   );

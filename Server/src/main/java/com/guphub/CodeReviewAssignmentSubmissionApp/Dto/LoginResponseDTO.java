@@ -3,6 +3,7 @@ package com.guphub.CodeReviewAssignmentSubmissionApp.Dto;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.User;
 
 public class LoginResponseDTO {
+    private String refresh_token;
     private User user;
     private String access_token;
 
@@ -10,10 +11,20 @@ public class LoginResponseDTO {
         super();
     }
 
-    public LoginResponseDTO(User user, String access_token){
+    public LoginResponseDTO(User user, String accessToken, String refreshToken) {
         this.user = user;
-        this.access_token = access_token;
+        this.access_token = accessToken;
+        this.refresh_token = refreshToken;
     }
+
+    public String getRefresh_token() {
+        return this.refresh_token;
+    }
+
+    public void setRefresh_token(String refreshToken) {
+        this.refresh_token = refreshToken;
+    }
+
 
     public User getUser(){
         return this.user;

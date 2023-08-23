@@ -16,7 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Transactional
@@ -36,6 +38,8 @@ public class AuthenticationService {
     @Autowired
     private TokenService tokenService;
 
+    private Map<String, String> accessTokenMap = new ConcurrentHashMap<>(); // Use a map to store access tokens
+    private Map<String, String> refreshTokenMap = new ConcurrentHashMap<>(); // Use a map to store refresh tokens
 
     public User registeredUser(UserDto userDto){
         String encodedPassword = passwordEncoder.encode(userDto.getPassword());
@@ -48,19 +52,49 @@ public class AuthenticationService {
         return userRepository.save(newUser);
     }
 
-    public LoginResponseDTO loginUser(UserDto userDto){
-
-        try{
+    public LoginResponseDTO loginUser(UserDto userDto) {
+        try {
             Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userDto.getUsername(),userDto.getPassword())
+                    new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword())
             );
 
-            String token = tokenService.generateJwt(auth);
+            String username = userDto.getUsername();
+            String accessToken;
+            String refreshToken;
 
-            return new LoginResponseDTO(userRepository.findByUsername(userDto.getUsername()).get(), token);
+            if (accessTokenMap.containsKey(username)) {
+                // If an access token already exists for the user, use it
+                accessToken = accessTokenMap.get(username);
+                refreshToken = refreshTokenMap.get(username);
 
-        } catch(AuthenticationException e){
-            return new LoginResponseDTO(null, "");
+                // Check if the refresh token is expired
+                if (!tokenService.isRefreshTokenValid(refreshToken)) {
+                    // If expired, generate a new refresh token
+                    refreshToken = tokenService.refreshJwt(accessToken);
+                    refreshTokenMap.put(username, refreshToken); // Update the refresh token
+                }
+            } else {
+                // Otherwise, generate a new access token and refresh token
+                accessToken = tokenService.generateJwt(auth);
+                refreshToken = tokenService.refreshJwt(accessToken); // Generate refresh token
+                accessTokenMap.put(username, accessToken); // Store the access token
+                refreshTokenMap.put(username, refreshToken); // Store the refresh token
+            }
+
+            return new LoginResponseDTO(userRepository.findByUsername(username).get(), accessToken, refreshToken);
+
+        } catch (AuthenticationException e) {
+            return new LoginResponseDTO(null, "", "");
+        }
+    }
+
+
+    public String refreshAccessToken(String refreshToken) {
+        try {
+            return tokenService.refreshJwt(refreshToken);
+        } catch (Exception e) {
+            // Handle token refresh error
+            return null;
         }
     }
 }

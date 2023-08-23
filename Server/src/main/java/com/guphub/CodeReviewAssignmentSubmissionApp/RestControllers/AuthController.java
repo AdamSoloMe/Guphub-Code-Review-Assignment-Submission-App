@@ -2,6 +2,7 @@ package com.guphub.CodeReviewAssignmentSubmissionApp.RestControllers;
 
 import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.User;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.LoginResponseDTO;
+import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.RefreshRequestDTO;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.UserDto;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class AuthController {
         }
     }
 
+
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserDto body) {
         try {
@@ -35,4 +37,18 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Login failed: " + e.getMessage());
         }
     }
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshAccessToken(@RequestBody RefreshRequestDTO refreshRequest) {
+        try {
+            String newAccessToken = authenticationService.refreshAccessToken(refreshRequest.getRefresh_token());
+            if (newAccessToken != null) {
+                return ResponseEntity.ok(newAccessToken);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token refresh failed: " + e.getMessage());
+        }
     }
+}
+
