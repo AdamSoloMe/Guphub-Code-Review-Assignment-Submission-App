@@ -28,15 +28,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration failed: " + e.getMessage());
         }
     }
-    @GetMapping("/check-registration/{username}")
-    public ResponseEntity<?> checkUserRegistration(@PathVariable String username) {
-        try {
-            boolean isRegistered = authenticationService.isUserRegistered(username);
-            return ResponseEntity.ok(isRegistered);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error checking registration status");
-        }
-    }
+//
 
     @GetMapping("/check-registration")
     public ResponseEntity<?> checkUserRegistration() {
@@ -44,6 +36,8 @@ public class AuthController {
             // Get the authenticated user's username from the security context
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
+
+            System.out.println("username found"+username);
 
             boolean isRegistered = authenticationService.isUserRegistered(username);
             if (isRegistered) {

@@ -49,7 +49,7 @@ public class AuthenticationService {
         Set<Role> authorities = new HashSet<>();
         authorities.add(userRole);
 
-        User newUser = new User(3L,userDto.getUsername(), encodedPassword, authorities);
+        User newUser = new User(userDto.getUsername(), encodedPassword, authorities);
         return userRepository.save(newUser);
     }
     public boolean isUserRegistered(String username) {
@@ -108,7 +108,7 @@ public class AuthenticationService {
         try {
             // Check if the refresh token is expired
             if (!tokenService.isRefreshTokenValid(refreshToken)) {
-                return null; // Expired refresh token
+                return "token is expired and is not valid"; // Expired refresh token
             }
 
             return tokenService.refreshJwt(refreshToken);
