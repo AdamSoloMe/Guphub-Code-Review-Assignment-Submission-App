@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Route,Routes, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useLocalState } from '../utils/useLocalStorage';
 import axios from 'axios';
 
-function PrivateRoute({ element: Element, ...rest }) {
-    const [accessToken] = useLocalState('', 'access_token');
+function PrivateRoute({ component }) {
+    
+    const [accessToken] = useLocalState('jiuvv', 'access_token');
     const [isRegistered, setIsRegistered] = useState(false);
 
-    useEffect(() => {
-        checkUserRegistration();
+   useEffect(() => {
+    //checkUserRegistration();
     }, []);
 
     const checkUserRegistration = async () => {
@@ -21,22 +22,19 @@ function PrivateRoute({ element: Element, ...rest }) {
     };
 
     return (
-        <Routes>
-        <Route
-            {...rest}
-            element={
-                accessToken ? (
+        <>
+               {accessToken ? (
                     isRegistered ? (
-                        <Element /> // Rendering the Dashboard component directly here
+                       {...component }// Rendering the Dashboard component directly here
                     ) : (
                         <Navigate to="/register" />
                     )
                 ) : (
                     <Navigate to="/login" />
                 )
-            }
-        />
-        </Routes>
+               }
+        </>
+        
     );
 }
 
