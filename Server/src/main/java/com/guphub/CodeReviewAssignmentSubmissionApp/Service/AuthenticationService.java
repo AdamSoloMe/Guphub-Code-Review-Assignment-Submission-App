@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -51,6 +52,11 @@ public class AuthenticationService {
         User newUser = new User(3L,userDto.getUsername(), encodedPassword, authorities);
         return userRepository.save(newUser);
     }
+    public boolean isUserRegistered(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.isPresent();
+    }
+
 
     public LoginResponseDTO loginUser(UserDto userDto) {
         try {

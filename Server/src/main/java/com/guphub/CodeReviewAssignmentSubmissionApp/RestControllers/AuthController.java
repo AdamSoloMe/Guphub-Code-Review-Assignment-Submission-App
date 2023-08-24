@@ -8,6 +8,8 @@ import com.guphub.CodeReviewAssignmentSubmissionApp.Service.AuthenticationServic
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,7 +28,33 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration failed: " + e.getMessage());
         }
     }
+    @GetMapping("/check-registration/{username}")
+    public ResponseEntity<?> checkUserRegistration(@PathVariable String username) {
+        try {
+            boolean isRegistered = authenticationService.isUserRegistered(username);
+            return ResponseEntity.ok(isRegistered);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error checking registration status");
+        }
+    }
 
+    @GetMapping("/check-registration")
+    public ResponseEntity<?> checkUserRegistration() {
+        try {
+            // Get the authenticated user's username from the security context
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+
+            boolean isRegistered = authenticationService.isUserRegistered(username);
+            if (isRegistered) {
+                return ResponseEntity.ok(true);
+            } else {
+                return ResponseEntity.ok(false);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error checking registration status");
+        }
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserDto body) {
