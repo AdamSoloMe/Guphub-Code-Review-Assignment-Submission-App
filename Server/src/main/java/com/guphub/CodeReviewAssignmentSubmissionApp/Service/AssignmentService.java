@@ -74,6 +74,9 @@ public class AssignmentService {
             assignmentDTO.setBranch(assignment.getBranch());
             assignmentDTO.setCodeReviewVideoUrl(assignment.getCodeReviewVideoUrl());
             assignmentDTO.setUser(assignment.getUser());
+            assignmentDTO.setAssignmentType(assignment.getAssignmentType()); // Populate assignment type
+            assignmentDTO.setAssignmentName(assignment.getAssignmentName()); // Populate assignment name
+
 
             assignmentDTOs.add(assignmentDTO);
         }
@@ -81,7 +84,7 @@ public class AssignmentService {
         return assignmentDTOs;
     }
 
-    public Optional<Assignment>  findByID(Long assignmentID){
+    public Optional<Assignment> findByID(Long assignmentID){
         return assignmentRepository.findById(assignmentID);
 
     }
@@ -94,6 +97,8 @@ public class AssignmentService {
         assignmentDTO.setBranch(assignment.getBranch());
         assignmentDTO.setCodeReviewVideoUrl(assignment.getCodeReviewVideoUrl());
         assignmentDTO.setUser(assignment.getUser());
+        assignmentDTO.setAssignmentType(assignment.getAssignmentType()); // Populate assignment type
+        assignmentDTO.setAssignmentName(assignment.getAssignmentName()); // Populate assignment name
 
         return assignmentDTO;
     }
@@ -103,6 +108,8 @@ public class AssignmentService {
         existingAssignment.setGithubUrl(updatedAssignmentDTO.getGithubUrl());
         existingAssignment.setBranch(updatedAssignmentDTO.getBranch());
         existingAssignment.setCodeReviewVideoUrl(updatedAssignmentDTO.getCodeReviewVideoUrl());
+        existingAssignment.setAssignmentType(updatedAssignmentDTO.getAssignmentType());
+        existingAssignment.setAssignmentName(updatedAssignmentDTO.getAssignmentName());
 
         return assignmentRepository.save(existingAssignment);
     }
