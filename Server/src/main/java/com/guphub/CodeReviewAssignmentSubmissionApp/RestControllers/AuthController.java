@@ -37,7 +37,7 @@ public class AuthController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
 
-            System.out.println("username found"+username);
+            System.out.println("username found "+username);
 
             boolean isRegistered = authenticationService.isUserRegistered(username);
             if (isRegistered) {

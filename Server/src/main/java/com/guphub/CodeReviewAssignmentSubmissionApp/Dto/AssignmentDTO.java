@@ -1,20 +1,16 @@
-package com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels;
+package com.guphub.CodeReviewAssignmentSubmissionApp.Dto;
 
+import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.User;
 
-import jakarta.persistence.*;
+public class AssignmentDTO {
 
-@Entity
-public class Assignment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String status;
     private String githubUrl;
-
     private String branch;
     private String codeReviewVideoUrl;
-    @ManyToOne(optional = false)
-    private User user;
+    private User user; // Include UserDTO here
+
     public Long getId() {
         return id;
     }
@@ -65,7 +61,7 @@ public class Assignment {
 
     @Override
     public String toString() {
-        return "Assignment{" +
+        return "AssignmentDTO{" +
                 "id=" + id +
                 ", status='" + status + '\'' +
                 ", githubUrl='" + githubUrl + '\'' +

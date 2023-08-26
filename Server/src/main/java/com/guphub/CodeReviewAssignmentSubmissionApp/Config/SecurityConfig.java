@@ -76,7 +76,7 @@ public class SecurityConfig {
         http.oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(jwtAuthenticationConverter());
-        http.sessionManagement(
+         http.sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
     http.exceptionHandling() // Handle exceptions like 401

@@ -98,8 +98,8 @@ function Login() {
         // Clear access token and refresh token from local storage
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
-        setAccessToken('');
-        setRefreshToken('');
+        setAccessToken();
+        setRefreshToken();
         setLoginPerformed(false);
     };
 
