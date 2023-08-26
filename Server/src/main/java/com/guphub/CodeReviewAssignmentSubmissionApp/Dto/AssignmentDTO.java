@@ -1,6 +1,7 @@
 package com.guphub.CodeReviewAssignmentSubmissionApp.Dto;
 
 import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.User;
+import com.guphub.CodeReviewAssignmentSubmissionApp.enums.AssignmentEnum;
 
 public class AssignmentDTO {
 
@@ -11,6 +12,9 @@ public class AssignmentDTO {
     private String codeReviewVideoUrl;
     private User user; // Include UserDTO here
 
+    private String assignmentName;
+
+    private AssignmentEnum assignmentType;
     public Long getId() {
         return id;
     }
@@ -59,6 +63,23 @@ public class AssignmentDTO {
         this.user = user;
     }
 
+    public AssignmentEnum getAssignmentType() {
+        return assignmentType;
+    }
+
+    public void setAssignmentType(AssignmentEnum assignmentType) {
+        this.assignmentType = assignmentType;
+    }
+
+    public String getAssignmentName() {
+        return assignmentName;
+    }
+
+    public void setAssignmentName(String assignmentName) {
+        this.assignmentName = assignmentName;
+    }
+
+
     @Override
     public String toString() {
         return "AssignmentDTO{" +
@@ -68,6 +89,7 @@ public class AssignmentDTO {
                 ", branch='" + branch + '\'' +
                 ", codeReviewVideoUrl='" + codeReviewVideoUrl + '\'' +
                 ", user=" + user +
+                ", assignmentName='" + assignmentName + '\'' +
                 '}';
     }
 }

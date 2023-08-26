@@ -20,14 +20,14 @@ public class AssignmentController {
     @Autowired
     private AssignmentService assignmentService;
 
-    @PostMapping("")
-    public ResponseEntity<?> createAssignments() {
+    @PostMapping("/{assignmentNumber}")
+    public ResponseEntity<?> createAssignments(@PathVariable int assignmentNumber) {
         try {
             // Get the authenticated user's information
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
 
-            AssignmentDTO newAssignment = assignmentService.createAssignmentForUser(username);
+            AssignmentDTO newAssignment = assignmentService.createAssignmentForUser(username, assignmentNumber);
 
             // Return success response or created assignment details
             return ResponseEntity.ok(newAssignment);
@@ -36,6 +36,7 @@ public class AssignmentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Assignment creation failed");
         }
     }
+
 
     @GetMapping("")
     public ResponseEntity<?> getAssignments() {

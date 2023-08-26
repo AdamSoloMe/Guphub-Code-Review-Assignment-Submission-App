@@ -1,6 +1,7 @@
 package com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels;
 
 
+import com.guphub.CodeReviewAssignmentSubmissionApp.enums.AssignmentEnum;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,8 +14,14 @@ public class Assignment {
 
     private String branch;
     private String codeReviewVideoUrl;
+
+    private String assignmentName;
     @ManyToOne(optional = false)
     private User user;
+
+    @Enumerated(EnumType.STRING) // Store enum as string in the database
+    private AssignmentEnum assignmentType; // Include assignment type based on assignment number
+
     public Long getId() {
         return id;
     }
@@ -62,6 +69,23 @@ public class Assignment {
     public void setUser(User user) {
         this.user = user;
     }
+    public AssignmentEnum getAssignmentType() {
+        return assignmentType;
+    }
+
+
+    public void setAssignmentType(AssignmentEnum assignmentType) {
+        this.assignmentType = assignmentType;
+    }
+
+    public String getAssignmentName() {
+        return assignmentName;
+    }
+
+    public void setAssignmentName(String assignmentName) {
+        this.assignmentName = assignmentName;
+    }
+
 
     @Override
     public String toString() {
@@ -71,7 +95,9 @@ public class Assignment {
                 ", githubUrl='" + githubUrl + '\'' +
                 ", branch='" + branch + '\'' +
                 ", codeReviewVideoUrl='" + codeReviewVideoUrl + '\'' +
+                ", assignmentName='" + assignmentName + '\'' +
                 ", user=" + user +
+                ", assignmentType=" + assignmentType +
                 '}';
     }
 }

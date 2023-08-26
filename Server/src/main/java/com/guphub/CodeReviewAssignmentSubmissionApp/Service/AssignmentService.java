@@ -5,6 +5,7 @@ import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.User;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.AssignmentDTO;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Repository.AssignmentRepository;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Repository.UserRepository;
+import com.guphub.CodeReviewAssignmentSubmissionApp.enums.AssignmentEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +22,20 @@ public class AssignmentService {
     @Autowired
     private UserRepository userRepository;
 
-    public AssignmentDTO createAssignmentForUser(String username) {
+    public AssignmentDTO createAssignmentForUser(String username, int assignmentNumber) {
         Assignment assignment = new Assignment();
         assignment.setStatus("Needs to be Submitted");
+        AssignmentEnum assignmentType = AssignmentEnum.getAssignmentEnumByNum(assignmentNumber);
+        String assignmentName = AssignmentEnum.getAssignmentEnumByName(assignmentType.getAssignmentName()).getAssignmentName();
+
+
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         assignment.setUser(user);
+
+        assignment.setAssignmentType(assignmentType);
+        assignment.setAssignmentName(assignmentName);
 
         Assignment savedAssignment = assignmentRepository.save(assignment);
 
@@ -39,8 +47,13 @@ public class AssignmentService {
         assignmentDTO.setCodeReviewVideoUrl(savedAssignment.getCodeReviewVideoUrl());
         assignmentDTO.setUser(savedAssignment.getUser()); // Set the user ID
 
+        // Set assignment type based on assignment number
+        //AssignmentEnum assignmentType = AssignmentEnum.getAssignmentEnumByNum(assignmentNumber);
+        assignmentDTO.setAssignmentType(assignmentType);
+        assignmentDTO.setAssignmentName(assignmentName);
         return assignmentDTO;
     }
+
 
     public Set<AssignmentDTO> findByUsername(String username) {
         User user = userRepository.findByUsername(username)
