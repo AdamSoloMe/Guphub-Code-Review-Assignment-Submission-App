@@ -2,6 +2,7 @@ package com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels;
 
 
 import com.guphub.CodeReviewAssignmentSubmissionApp.enums.AssignmentEnum;
+import com.guphub.CodeReviewAssignmentSubmissionApp.enums.AssignmentStatusEnum;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,8 +10,12 @@ public class Assignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private AssignmentStatusEnum status;
     private String githubUrl;
+
+    private Integer number;
 
     private String branch;
     private String codeReviewVideoUrl;
@@ -30,11 +35,11 @@ public class Assignment {
         this.id = id;
     }
 
-    public String getStatus() {
+    public AssignmentStatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(AssignmentStatusEnum status) {
         this.status = status;
     }
 
@@ -45,6 +50,15 @@ public class Assignment {
     public void setGithubUrl(String githubUrl) {
         this.githubUrl = githubUrl;
     }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
 
     public String getBranch() {
         return branch;
@@ -91,8 +105,9 @@ public class Assignment {
     public String toString() {
         return "Assignment{" +
                 "id=" + id +
-                ", status='" + status + '\'' +
+                ", status=" + status +
                 ", githubUrl='" + githubUrl + '\'' +
+                ", number=" + number +
                 ", branch='" + branch + '\'' +
                 ", codeReviewVideoUrl='" + codeReviewVideoUrl + '\'' +
                 ", assignmentName='" + assignmentName + '\'' +

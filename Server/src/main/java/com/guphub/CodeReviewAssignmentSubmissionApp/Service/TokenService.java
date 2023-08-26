@@ -28,7 +28,7 @@ public class TokenService {
                 .collect(Collectors.joining(" "));
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
+                .issuer("Server")
                 .issuedAt(now)
                 .subject(auth.getName())
                 .claim("roles", scope)

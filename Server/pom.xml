@@ -11,7 +11,7 @@
 	<groupId>com.guphub</groupId>
 	<artifactId>CodeReviewAssignmentSubmissionApp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>CodeReviewAssignmentSubmissionApp</name>
 	<description>Coding Review Submission app</description>
 	<properties>

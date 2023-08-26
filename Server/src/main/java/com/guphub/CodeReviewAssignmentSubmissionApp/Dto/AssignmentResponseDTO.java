@@ -1,13 +1,21 @@
 package com.guphub.CodeReviewAssignmentSubmissionApp.Dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.User;
+import com.guphub.CodeReviewAssignmentSubmissionApp.Utils.AssignmentStatusEnumDeserializer;
 import com.guphub.CodeReviewAssignmentSubmissionApp.enums.AssignmentEnum;
+import com.guphub.CodeReviewAssignmentSubmissionApp.enums.AssignmentStatusEnum;
 
-public class AssignmentDTO {
+public class AssignmentResponseDTO {
 
     private Long id;
-    private String status;
+
+    @JsonDeserialize(using = AssignmentStatusEnumDeserializer.class)
+    private AssignmentStatusEnum status;
     private String githubUrl;
+
+
+    private Integer number; // New field for assignment number
     private String branch;
     private String codeReviewVideoUrl;
     private User user; // Include UserDTO here
@@ -23,11 +31,11 @@ public class AssignmentDTO {
         this.id = id;
     }
 
-    public String getStatus() {
+    public AssignmentStatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(AssignmentStatusEnum status) {
         this.status = status;
     }
 
@@ -38,6 +46,15 @@ public class AssignmentDTO {
     public void setGithubUrl(String githubUrl) {
         this.githubUrl = githubUrl;
     }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
 
     public String getBranch() {
         return branch;
@@ -82,14 +99,16 @@ public class AssignmentDTO {
 
     @Override
     public String toString() {
-        return "AssignmentDTO{" +
+        return "AssignmentResponseDTO{" +
                 "id=" + id +
-                ", status='" + status + '\'' +
+                ", status=" + status +
                 ", githubUrl='" + githubUrl + '\'' +
+                ", number=" + number +
                 ", branch='" + branch + '\'' +
                 ", codeReviewVideoUrl='" + codeReviewVideoUrl + '\'' +
                 ", user=" + user +
                 ", assignmentName='" + assignmentName + '\'' +
+                ", assignmentType=" + assignmentType +
                 '}';
     }
 }

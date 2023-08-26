@@ -1,8 +1,9 @@
 package com.guphub.CodeReviewAssignmentSubmissionApp.RestControllers;
 
 import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.Assignment;
-import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.AssignmentDTO;
+import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.AssignmentResponseDTO;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Service.AssignmentService;
+import com.guphub.CodeReviewAssignmentSubmissionApp.enums.AssignmentStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class AssignmentController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
 
-            AssignmentDTO newAssignment = assignmentService.createAssignmentForUser(username, assignmentNumber);
+            AssignmentResponseDTO newAssignment = assignmentService.createAssignmentForUser(username, assignmentNumber);
 
             // Return success response or created assignment details
             return ResponseEntity.ok(newAssignment);
@@ -44,7 +45,7 @@ public class AssignmentController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
 
-            Set<AssignmentDTO> assignments = assignmentService.findByUsername(username);
+            Set<AssignmentResponseDTO> assignments = assignmentService.findByUsername(username);
 
             return ResponseEntity.ok(assignments);
         } catch (Exception e) {
@@ -61,8 +62,8 @@ public class AssignmentController {
             Optional<Assignment> assignment = assignmentService.findByID(assignmentID);
 
             if (assignment.isPresent()) {
-                AssignmentDTO assignmentDTO = assignmentService.convertToDTO(assignment.get());
-                return ResponseEntity.ok(assignmentDTO);
+                AssignmentResponseDTO assignmentResponseDTO = assignmentService.convertToDTO(assignment.get());
+                return ResponseEntity.ok(assignmentResponseDTO);
             } else {
                 return ResponseEntity.notFound().build();
             }
@@ -72,7 +73,7 @@ public class AssignmentController {
     }
 
     @PutMapping("{assignmentID}")
-    public ResponseEntity<?> updateAssignment(@PathVariable long assignmentID, @RequestBody AssignmentDTO updatedAssignmentDTO) {
+    public ResponseEntity<?> updateAssignment(@PathVariable long assignmentID, @RequestBody AssignmentResponseDTO updatedAssignmentResponseDTO) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
@@ -80,15 +81,15 @@ public class AssignmentController {
             Optional<Assignment> existingAssignment = assignmentService.findByID(assignmentID);
 
             if (existingAssignment.isPresent()) {
-                Assignment updatedAssignment = assignmentService.updateAssignment(existingAssignment.get(), updatedAssignmentDTO);
+                Assignment updatedAssignment = assignmentService.updateAssignment(existingAssignment.get(), updatedAssignmentResponseDTO);
 
-                AssignmentDTO assignmentDTO = assignmentService.convertToDTO(updatedAssignment);
-                return ResponseEntity.ok(assignmentDTO);
+                AssignmentResponseDTO assignmentResponseDTO = assignmentService.convertToDTO(updatedAssignment);
+                return ResponseEntity.ok(assignmentResponseDTO);
             } else {
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Assignment not found: could be updated ");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Assignment not found: could not be updated ");
         }
     }
 
@@ -117,9 +118,9 @@ public class AssignmentController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
 
-            Set<AssignmentDTO> assignments = assignmentService.findByUsername(username);
+            Set<AssignmentResponseDTO> assignments = assignmentService.findByUsername(username);
 
-            for (AssignmentDTO assignment : assignments) {
+            for (AssignmentResponseDTO assignment : assignments) {
                 assignmentService.deleteAssignmentByID(assignment.getId());
             }
 
@@ -128,6 +129,14 @@ public class AssignmentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
-
+    @GetMapping("/statuses")
+    public ResponseEntity<?> getAllStatuses() {
+        try {
+            AssignmentStatusEnum[] statusEnums = AssignmentStatusEnum.values();
+            return ResponseEntity.ok(statusEnums);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving statuses");
+        }
+    }
 
 }
