@@ -6,7 +6,6 @@ import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.LoginResponseDTO;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.UserDto;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Repository.RoleRepository;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +21,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-@Transactional
 public class AuthenticationService {
 
     @Autowired
