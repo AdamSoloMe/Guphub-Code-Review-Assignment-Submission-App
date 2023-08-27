@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
@@ -45,7 +46,7 @@ public class AssignmentController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
 
-            Set<AssignmentResponseDTO> assignments = assignmentService.findByUsername(username);
+          Set<AssignmentResponseDTO> assignments = assignmentService.findByUsername(username);
 
             return ResponseEntity.ok(assignments);
         } catch (Exception e) {
@@ -118,7 +119,7 @@ public class AssignmentController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
 
-            Set<AssignmentResponseDTO> assignments = assignmentService.findByUsername(username);
+            Collection<AssignmentResponseDTO> assignments = assignmentService.findByUsername(username);
 
             for (AssignmentResponseDTO assignment : assignments) {
                 assignmentService.deleteAssignmentByID(assignment.getId());

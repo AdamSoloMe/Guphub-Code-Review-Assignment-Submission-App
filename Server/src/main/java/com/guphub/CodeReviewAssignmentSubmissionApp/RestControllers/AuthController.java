@@ -28,6 +28,19 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration failed: " + e.getMessage());
         }
     }
+
+    @PostMapping("/register-admin")
+    public ResponseEntity<?> registerUserAsAdmin(@RequestBody UserDto body) {
+        try {
+            // Set a flag in the UserDto to indicate that this user should be registered as an admin
+            body.setAdmin(true); // You should add this method in your UserDto class
+
+            User registeredUser = authenticationService.registeredUser(body);
+            return ResponseEntity.ok(registeredUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration as admin failed: " + e.getMessage());
+        }
+    }
 //
 
     @GetMapping("/check-registration")
