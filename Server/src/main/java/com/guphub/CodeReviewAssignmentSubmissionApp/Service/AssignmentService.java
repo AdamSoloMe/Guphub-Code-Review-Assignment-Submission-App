@@ -74,13 +74,23 @@ public class AssignmentService {
         }).findFirst();
         return nextAssignmentNumOpt.orElse(1);
     }
-
-
     public Set<AssignmentResponseDTO> findByUsername(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        Set<Assignment> assignments = assignmentRepository.findByUser(user);
+        Set<Assignment> assignments;
+
+        boolean isAdmin = user.getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().equals("ADMIN"));
+
+        if (isAdmin) {
+            // If the user has the admin role, retrieve all assignments
+            assignments =  assignmentRepository.findByAdmin(user);
+        } else {
+            // If the user has only the user role, retrieve assignments specific to that user
+            assignments = assignmentRepository.findByUser(user);
+        }
+
         Set<AssignmentResponseDTO> assignmentResponseDTOS = new HashSet<>();
 
         if (assignments.isEmpty()) {
@@ -99,12 +109,45 @@ public class AssignmentService {
             assignmentResponseDTO.setAssignmentName(assignment.getAssignmentName()); // Populate assignment name
             assignmentResponseDTO.setNumber(assignment.getNumber());
 
-
             assignmentResponseDTOS.add(assignmentResponseDTO);
         }
 
         return assignmentResponseDTOS;
     }
+
+
+
+
+//    public Set<AssignmentResponseDTO> findByUsername(String username) {
+//        User user = userRepository.findByUsername(username)
+//                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+//
+//
+//        Set<Assignment> assignments = assignmentRepository.findByUser(user);
+//        Set<AssignmentResponseDTO> assignmentResponseDTOS = new HashSet<>();
+//
+//        if (assignments.isEmpty()) {
+//            throw new IllegalStateException("No assignments found for the user");
+//        }
+//
+//        for (Assignment assignment : assignments) {
+//            AssignmentResponseDTO assignmentResponseDTO = new AssignmentResponseDTO();
+//            assignmentResponseDTO.setId(assignment.getId());
+//            assignmentResponseDTO.setStatus(assignment.getStatus());
+//            assignmentResponseDTO.setGithubUrl(assignment.getGithubUrl());
+//            assignmentResponseDTO.setBranch(assignment.getBranch());
+//            assignmentResponseDTO.setCodeReviewVideoUrl(assignment.getCodeReviewVideoUrl());
+//            assignmentResponseDTO.setUser(assignment.getUser());
+//            assignmentResponseDTO.setAssignmentType(assignment.getAssignmentType()); // Populate assignment type
+//            assignmentResponseDTO.setAssignmentName(assignment.getAssignmentName()); // Populate assignment name
+//            assignmentResponseDTO.setNumber(assignment.getNumber());
+//
+//
+//            assignmentResponseDTOS.add(assignmentResponseDTO);
+//        }
+//
+//        return assignmentResponseDTOS;
+//    }
 
     public Optional<Assignment> findByID(Long assignmentID){
         return assignmentRepository.findById(assignmentID);

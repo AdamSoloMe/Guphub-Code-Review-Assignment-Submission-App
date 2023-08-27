@@ -42,16 +42,23 @@ public class AuthenticationService {
     private Map<String, String> accessTokenMap = new ConcurrentHashMap<>(); // Use a map to store access tokens
     private Map<String, String> refreshTokenMap = new ConcurrentHashMap<>(); // Use a map to store refresh tokens
 
-    public User registeredUser(UserDto userDto){
+    public User registeredUser(UserDto userDto) {
         String encodedPassword = passwordEncoder.encode(userDto.getPassword());
-        Role userRole = roleRepository.findRoleByAuthority("USER").get();
+        Role userRole = roleRepository.findRoleByAuthority("USER").orElseThrow(() -> new RuntimeException("USER Role not found."));
 
         Set<Role> authorities = new HashSet<>();
         authorities.add(userRole);
 
+        // Check if this user should be registered as an admin
+        if (userDto.isAdmin()) { // Add a method isAdmin() in UserDto to check if it's an admin user
+            Role adminRole = roleRepository.findRoleByAuthority("ADMIN").orElseThrow(() -> new RuntimeException("ADMIN Role not found."));
+            authorities.add(adminRole);
+        }
+
         User newUser = new User(userDto.getUsername(), encodedPassword, authorities);
         return userRepository.save(newUser);
     }
+
     public boolean isUserRegistered(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         return user.isPresent();
@@ -78,20 +85,15 @@ public class AuthenticationService {
                     // Clear the expired tokens and generate new ones
                     accessTokenMap.remove(username);
                     refreshTokenMap.remove(username);
-                    accessToken = tokenService.generateJwt(auth);
+                    accessToken = tokenService.generateJwt(auth); // Use updated generateJwt method
                     refreshToken = tokenService.refreshJwt(accessToken);
                     accessTokenMap.put(username, accessToken);
                     refreshTokenMap.put(username, refreshToken);
                 }
-//                 else if ( (tokenService.isRefreshTokenValid(refreshToken)))
-//                {
-//                    // Refresh the access token using the existing refresh token
-//                    accessToken = tokenService.refreshJwt(refreshToken);
-//                    accessTokenMap.put(username, accessToken);
-//                }
+                // Add more conditions for different scenarios if needed
             } else {
                 // Otherwise, generate a new access token and refresh token
-                accessToken = tokenService.generateJwt(auth);
+                accessToken = tokenService.generateJwt(auth); // Use updated generateJwt method
                 refreshToken = tokenService.refreshJwt(accessToken);
                 accessTokenMap.put(username, accessToken);
                 refreshTokenMap.put(username, refreshToken);
