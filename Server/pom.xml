@@ -11,7 +11,7 @@
 	<groupId>com.guphub</groupId>
 	<artifactId>CodeReviewAssignmentSubmissionApp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>CodeReviewAssignmentSubmissionApp</name>
 	<description>Coding Review Submission app</description>
 	<properties>
@@ -59,6 +59,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.15.2</version>
 		</dependency>
 	</dependencies>
 

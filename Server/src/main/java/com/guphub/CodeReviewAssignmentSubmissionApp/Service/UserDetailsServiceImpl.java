@@ -31,11 +31,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         System.out.println("User found");
                Optional<User> userOptional= userRepo.findByUsername(username);
         return userOptional.orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
-//
-//        if (!username.equals("Adam")) throw new UsernameNotFoundException("not Adam");
-//        Set<Role> roles=new HashSet<>();
-//        roles.add(new Role(1L,"USER"));
-//
-//        return new User(1L,"Adam",passwordEncoder.encode("password"),roles);
+
     }
 }

@@ -25,11 +25,6 @@ public class User implements UserDetails {
    @JsonIgnore
     private String password;
 
-    public User(String admin, String password, Set<Role> roles) {
-        this.username=admin;
-        this.password=admin;
-        this.authorities=roles;
-    }
 
     public void setAuthorities(Set<Role> authorities) {
         this.authorities = authorities;
@@ -47,6 +42,20 @@ public class User implements UserDetails {
     public  User(){
         super();
         this.authorities= new HashSet<Role>();
+    }
+
+    public User(String username, String password, Set<Role> roles) {
+        this.username=username;
+        this.password=password;
+        this.authorities=roles;
+    }
+
+    public User(LocalDate cohortStartDate, String username, String password, Set<Role> authorities) {
+        super();
+        this.cohortStartDate = cohortStartDate;
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
     }
 
     public User(Long id, LocalDate cohortStartDate, String username, String password, Set<Role> authorities) {

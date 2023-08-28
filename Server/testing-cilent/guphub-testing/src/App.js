@@ -1,45 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
-import { useState } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+import Login from './Login/Login';
+import Register from './Register/Register';
+import Dashboard from './Dashboard';
+import PrivateRoute from './PrivateRoute/PrivateRoute';
 
 function App() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post('/auth/register', {
-        username: username,
-        password: password
-      });
-
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-
-  };
   return (
     <div>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Register</button>
-      </form>
+      <nav style={{ backgroundColor: '#333', color: 'white', padding: '10px 0' }}>
+        <ul style={{ listStyle: 'none', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 0, padding: 0 }}>
+          <li style={{ margin: '0 10px' }}><Link to="/" style={{ color: 'white', textDecoration: 'none' }}>Home</Link></li>
+          <li style={{ margin: '0 10px' }}><Link to="/login" style={{ color: 'white', textDecoration: 'none' }}>Login</Link></li>
+          <li style={{ margin: '0 10px' }}><Link to="/register" style={{ color: 'white', textDecoration: 'none' }}>Register</Link></li>
+          {/* Add more navigation links if needed */}
+        </ul>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<div>home</div>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        {/*<!-- Runs up to -->*/}
+        <Route path="/Dashboard" element={<PrivateRoute component={<Dashboard />} />} />
+      </Routes>
     </div>
   );
 }

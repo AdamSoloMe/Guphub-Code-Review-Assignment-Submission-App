@@ -1,32 +1,28 @@
-package com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels;
+package com.guphub.CodeReviewAssignmentSubmissionApp.Dto;
 
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.User;
+import com.guphub.CodeReviewAssignmentSubmissionApp.Utils.AssignmentStatusEnumDeserializer;
 import com.guphub.CodeReviewAssignmentSubmissionApp.enums.AssignmentEnum;
 import com.guphub.CodeReviewAssignmentSubmissionApp.enums.AssignmentStatusEnum;
-import jakarta.persistence.*;
 
-@Entity
-public class Assignment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AssignmentResponseDTO {
+
     private Long id;
 
-    @Enumerated(EnumType.STRING)
+    @JsonDeserialize(using = AssignmentStatusEnumDeserializer.class)
     private AssignmentStatusEnum status;
     private String githubUrl;
 
-    private Integer number;
 
+    private Integer number; // New field for assignment number
     private String branch;
     private String codeReviewVideoUrl;
+    private User user; // Include UserDTO here
 
     private String assignmentName;
-    @ManyToOne(optional = false)
-    private User user;
 
-    @Enumerated(EnumType.STRING) // Store enum as string in the database
-    private AssignmentEnum assignmentType; // Include assignment type based on assignment number
-
+    private AssignmentEnum assignmentType;
     public Long getId() {
         return id;
     }
@@ -83,10 +79,10 @@ public class Assignment {
     public void setUser(User user) {
         this.user = user;
     }
+
     public AssignmentEnum getAssignmentType() {
         return assignmentType;
     }
-
 
     public void setAssignmentType(AssignmentEnum assignmentType) {
         this.assignmentType = assignmentType;
@@ -103,15 +99,15 @@ public class Assignment {
 
     @Override
     public String toString() {
-        return "Assignment{" +
+        return "AssignmentResponseDTO{" +
                 "id=" + id +
                 ", status=" + status +
                 ", githubUrl='" + githubUrl + '\'' +
                 ", number=" + number +
                 ", branch='" + branch + '\'' +
                 ", codeReviewVideoUrl='" + codeReviewVideoUrl + '\'' +
-                ", assignmentName='" + assignmentName + '\'' +
                 ", user=" + user +
+                ", assignmentName='" + assignmentName + '\'' +
                 ", assignmentType=" + assignmentType +
                 '}';
     }

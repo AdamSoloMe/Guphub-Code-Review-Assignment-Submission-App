@@ -6,7 +6,6 @@ import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.LoginResponseDTO;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.UserDto;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Repository.RoleRepository;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,10 +15,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-@Transactional
 public class AuthenticationService {
 
     @Autowired
@@ -36,31 +37,84 @@ public class AuthenticationService {
     @Autowired
     private TokenService tokenService;
 
+    private Map<String, String> accessTokenMap = new ConcurrentHashMap<>(); // Use a map to store access tokens
+    private Map<String, String> refreshTokenMap = new ConcurrentHashMap<>(); // Use a map to store refresh tokens
 
-    public User registeredUser(UserDto userDto){
+    public User registeredUser(UserDto userDto) {
         String encodedPassword = passwordEncoder.encode(userDto.getPassword());
-        Role userRole = roleRepository.findRoleByAuthority("USER").get();
+        Role userRole = roleRepository.findRoleByAuthority("USER").orElseThrow(() -> new RuntimeException("USER Role not found."));
 
         Set<Role> authorities = new HashSet<>();
         authorities.add(userRole);
 
-        User newUser = new User(3L,userDto.getUsername(), encodedPassword, authorities);
+        // Check if this user should be registered as an admin
+        if (userDto.isAdmin()) { // Add a method isAdmin() in UserDto to check if it's an admin user
+            Role adminRole = roleRepository.findRoleByAuthority("ADMIN").orElseThrow(() -> new RuntimeException("ADMIN Role not found."));
+            authorities.add(adminRole);
+        }
+
+        User newUser = new User(userDto.getUsername(), encodedPassword, authorities);
         return userRepository.save(newUser);
     }
 
-    public LoginResponseDTO loginUser(UserDto userDto){
+    public boolean isUserRegistered(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.isPresent();
+    }
 
-        try{
+
+    public LoginResponseDTO loginUser(UserDto userDto) {
+        try {
             Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userDto.getUsername(),userDto.getPassword())
+                    new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword())
             );
 
-            String token = tokenService.generateJwt(auth);
+            String username = userDto.getUsername();
+            String accessToken;
+            String refreshToken;
 
-            return new LoginResponseDTO(userRepository.findByUsername(userDto.getUsername()).get(), token);
+            if (accessTokenMap.containsKey(username)) {
+                // If an access token already exists for the user, use it
+                accessToken = accessTokenMap.get(username);
+                refreshToken = refreshTokenMap.get(username);
 
-        } catch(AuthenticationException e){
-            return new LoginResponseDTO(null, "");
+                // Check if the refresh token is expired
+                if (!tokenService.isRefreshTokenValid(refreshToken)) {
+                    // Clear the expired tokens and generate new ones
+                    accessTokenMap.remove(username);
+                    refreshTokenMap.remove(username);
+                    accessToken = tokenService.generateJwt(auth); // Use updated generateJwt method
+                    refreshToken = tokenService.refreshJwt(accessToken);
+                    accessTokenMap.put(username, accessToken);
+                    refreshTokenMap.put(username, refreshToken);
+                }
+                // Add more conditions for different scenarios if needed
+            } else {
+                // Otherwise, generate a new access token and refresh token
+                accessToken = tokenService.generateJwt(auth); // Use updated generateJwt method
+                refreshToken = tokenService.refreshJwt(accessToken);
+                accessTokenMap.put(username, accessToken);
+                refreshTokenMap.put(username, refreshToken);
+            }
+
+            return new LoginResponseDTO(userRepository.findByUsername(username).get(), accessToken, refreshToken);
+
+        } catch (AuthenticationException e) {
+            return new LoginResponseDTO(null, "", "");
+        }
+    }
+
+    public String refreshAccessToken(String refreshToken) {
+        try {
+            // Check if the refresh token is expired
+            if (!tokenService.isRefreshTokenValid(refreshToken)) {
+                return "token is expired and is not valid"; // Expired refresh token
+            }
+
+            return tokenService.refreshJwt(refreshToken);
+        } catch (Exception e) {
+            // Handle token refresh error
+            return null;
         }
     }
 }
