@@ -22,7 +22,7 @@ public class AssignmentController {
     @Autowired
     private AssignmentService assignmentService;
 
-    @PostMapping("/{assignmentNumber}")
+    @PostMapping("/{assignmentNumber}")//done
     public ResponseEntity<?> createAssignments(@PathVariable int assignmentNumber) {
         try {
             // Get the authenticated user's information
@@ -40,7 +40,7 @@ public class AssignmentController {
     }
 
 
-    @GetMapping("")
+    @GetMapping("")//done
     public ResponseEntity<?> getAssignments() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

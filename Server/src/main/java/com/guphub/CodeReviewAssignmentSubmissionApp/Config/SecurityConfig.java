@@ -88,19 +88,19 @@ public class SecurityConfig {
 
     }
 
-//    @Bean
-//    public CorsFilter corsFilter() {
-//        CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.addAllowedOrigin("*"); // Allow requests from any origin
-//        corsConfiguration.addAllowedHeader("*"); // Allow all headers
-//        corsConfiguration.addAllowedMethod("*"); // Allow all HTTP methods
-//        corsConfiguration.setAllowCredentials(true); // Allow sending cookies
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", corsConfiguration);
-//
-//        return new CorsFilter(source);
-//    }
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("*"); // Allow requests from any origin
+        corsConfiguration.addAllowedHeader("*"); // Allow all headers
+        corsConfiguration.addAllowedMethod("*"); // Allow all HTTP methods
+        corsConfiguration.setAllowCredentials(true); // Allow sending cookies
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+
+        return new CorsFilter(source);
+    }
     @Bean
     public JwtDecoder jwtDecoder(){
         return NimbusJwtDecoder.withPublicKey(keyProperties.getPublicKey()).build();
