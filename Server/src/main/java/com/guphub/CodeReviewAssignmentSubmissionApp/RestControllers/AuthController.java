@@ -1,6 +1,7 @@
 package com.guphub.CodeReviewAssignmentSubmissionApp.RestControllers;
 
 import com.guphub.CodeReviewAssignmentSubmissionApp.Datamodels.User;
+import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.AccessTokenResponseDTO;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.LoginResponseDTO;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.RefreshRequestDTO;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.UserDto;
@@ -77,7 +78,8 @@ public class AuthController {
         try {
             String newAccessToken = authenticationService.refreshAccessToken(refreshRequest.getRefresh_token());
             if (newAccessToken != null) {
-                return ResponseEntity.ok(newAccessToken);
+                AccessTokenResponseDTO response = new AccessTokenResponseDTO(newAccessToken);
+                return ResponseEntity.ok(response);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token");
             }

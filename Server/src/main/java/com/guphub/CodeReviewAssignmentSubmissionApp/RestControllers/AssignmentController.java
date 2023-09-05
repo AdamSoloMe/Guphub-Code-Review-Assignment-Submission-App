@@ -22,7 +22,7 @@ public class AssignmentController {
     @Autowired
     private AssignmentService assignmentService;
 
-    @PostMapping("/{assignmentNumber}")
+    @PostMapping("/{assignmentNumber}")//done
     public ResponseEntity<?> createAssignments(@PathVariable int assignmentNumber) {
         try {
             // Get the authenticated user's information
@@ -40,7 +40,7 @@ public class AssignmentController {
     }
 
 
-    @GetMapping("")
+    @GetMapping("")//done
     public ResponseEntity<?> getAssignments() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -54,7 +54,7 @@ public class AssignmentController {
         }
     }
 
-    @GetMapping("{assignmentID}")
+    @GetMapping("{assignmentID}")//done
     public ResponseEntity<?> getAssignmentsByID(@PathVariable long assignmentID) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -73,7 +73,7 @@ public class AssignmentController {
         }
     }
 
-    @PutMapping("{assignmentID}")
+    @PutMapping("{assignmentID}")//done
     public ResponseEntity<?> updateAssignment(@PathVariable long assignmentID, @RequestBody AssignmentResponseDTO updatedAssignmentResponseDTO) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -94,7 +94,7 @@ public class AssignmentController {
         }
     }
 
-    @DeleteMapping("{assignmentID}")
+    @DeleteMapping("{assignmentID}") //done
     public ResponseEntity<String> deleteAssignment(@PathVariable long assignmentID) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -113,7 +113,7 @@ public class AssignmentController {
         }
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("") //done
     public ResponseEntity<String> deleteAllAssignments() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -130,7 +130,7 @@ public class AssignmentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
-    @GetMapping("/statuses")
+    @GetMapping("/statuses") //done
     public ResponseEntity<?> getAllStatuses() {
         try {
             AssignmentStatusEnum[] statusEnums = AssignmentStatusEnum.values();

@@ -5,7 +5,6 @@ import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.CommentDTO;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Dto.CommentResponseDTO;
 import com.guphub.CodeReviewAssignmentSubmissionApp.Service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +19,7 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @PostMapping//works
+    @PostMapping//works, done
     public ResponseEntity<Comment> createComment(@RequestBody CommentDTO commentDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -30,19 +29,19 @@ public class CommentController {
         return ResponseEntity.ok(createdComment);
     }
 
-    @GetMapping("/assignment/{assignmentId}")//works
+    @GetMapping("/assignment/{assignmentId}")//works, done
     public ResponseEntity<Set<Comment>> getCommentsByAssignmentId(@PathVariable Long assignmentId) {
         Set<Comment> comments = commentService.getCommentsByAssignmentId(assignmentId);
         return ResponseEntity.ok(comments);
     }
 
-    @GetMapping("/{commentId}")//works
+    @GetMapping("/{commentId}")//works, done
     public ResponseEntity<CommentResponseDTO> getCommentById(@PathVariable Long commentId) {
         CommentResponseDTO commentResponseDTO = commentService.getCommentResponseById(commentId);
         return ResponseEntity.ok(commentResponseDTO);
     }
 
-    @PutMapping("/{commentId}")//works
+    @PutMapping("/{commentId}")//works, done
     public ResponseEntity<CommentResponseDTO> updateComment(
             @PathVariable Long commentId,
             @RequestBody CommentDTO commentDTO) {
@@ -51,13 +50,13 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")//works
-    public ResponseEntity<Void> deleteCommentById(@PathVariable Long commentId) {
+    public ResponseEntity<String> deleteCommentById(@PathVariable Long commentId) {
         commentService.deleteCommentById(commentId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Comment deleted successfully");
     }
 
 
-    @DeleteMapping("/assignment/{assignmentId}")//needs fix
+    @DeleteMapping("/assignment/{assignmentId}")//works, done
     public ResponseEntity<String> deleteCommentsByAssignmentId(@PathVariable Long assignmentId) {
         commentService.deleteCommentsByAssignmentId(assignmentId);
         return ResponseEntity.ok("All Comments for this assiignment have been deleted successfully");
@@ -88,7 +87,7 @@ public class CommentController {
         return ResponseEntity.ok("Comment deleted successfully");
     }
 
-    @GetMapping("/assignment/{assignmentId}/comments")
+    @GetMapping("/assignment/{assignmentId}/comments") //works,done
     public ResponseEntity<Set<CommentResponseDTO>> getAssignmentComments(@PathVariable Long assignmentId) {
         Set<CommentResponseDTO> comments = commentService.getCommentsFromAssignmentId(assignmentId);
         return ResponseEntity.ok(comments);
