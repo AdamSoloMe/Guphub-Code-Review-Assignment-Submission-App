@@ -26,7 +26,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: cd /home/ec2-user/actions-runner/_work/Guphub-Code-Review-Assignment-Submission-App/Guphub-Code-Review-Assignment-Submission-App/Server/pom.xml && mvn -B package
+      run: cd /home/ec2-user/actions-runner/_work/Guphub-Code-Review-Assignment-Submission-App/Guphub-Code-Review-Assignment-Submission-App/Server && mvn -B package
 
 
 
