@@ -1,3 +1,11 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
 name: Java CI with Maven
 
 on:
@@ -17,18 +25,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Set up Environment Variables
-      env:
-        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-      run: |
-        echo "Setting up environment variables"
-        echo "DATABASE_USERNAME=$DATABASE_USERNAME" >> $GITHUB_ENV
-        echo "DATABASE_PASSWORD=$DATABASE_PASSWORD" >> $GITHUB_ENV
     - name: Build with Maven
-      run: |
-        cd /home/ec2-user/actions-runner/_work/Guphub-Code-Review-Assignment-Submission-App/Guphub-Code-Review-Assignment-Submission-App/Server
-        mvn -B package -Dspring.datasource.username=$DATABASE_USERNAME -Dspring.datasource.password=$DATABASE_PASSWORD
+      run: cd /home/ec2-user/actions-runner/_work/Guphub-Code-Review-Assignment-Submission-App/Guphub-Code-Review-Assignment-Submission-App/Server && mvn -B package
+
+
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
