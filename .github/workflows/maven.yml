@@ -16,7 +16,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '17'
-        distribution: 'temurin'  # Corrected distribution name
+        distribution: 'temurin'
         cache: maven
     - name: Set up Environment Variables
       env:
@@ -26,10 +26,8 @@ jobs:
         echo "Setting up environment variables"
         echo "DATABASE_USERNAME=$DATABASE_USERNAME" >> $GITHUB_ENV
         echo "DATABASE_PASSWORD=$DATABASE_PASSWORD" >> $GITHUB_ENV
-    - name: Build with Maven
-      run: |
-        cd /home/ec2-user/actions-runner/_work/Guphub-Code-Review-Assignment-Submission-App/Guphub-Code-Review-Assignment-Submission-App/Server
-        mvn -B package -Dspring.datasource.username=$DATABASE_USERNAME -Dspring.datasource.password=$DATABASE_PASSWORD
+    - name: Build with Maven (with detailed logging)
+      run: mvn -e -B package -Dspring.datasource.username=$DATABASE_USERNAME -Dspring.datasource.password=$DATABASE_PASSWORD
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
