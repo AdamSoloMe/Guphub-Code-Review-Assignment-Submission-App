@@ -28,4 +28,4 @@ jobs:
         echo "DATABASE_PASSWORD=$DATABASE_PASSWORD" >> $GITHUB_ENV
     - name: Build with Maven
       run: |
-        mvn -B package -f /home/ubuntu/actions-runner/_work/Guphub-Code-Review-Assignment-Submission-App/Guphub-Code-Review-Assignment-Submission-App/pom.xml -Dspring.datasource.username=$DATABASE_USERNAME -Dspring.datasource.password=$DATABASE_PASSWORD
+        mvn -B package -f /home/ubuntu/actions-runner/_work/Guphub-Code-Review-Assignment-Submission-App/Guphub-Code-Review-Assignment-Submission-App/Server -Dspring.datasource.username=$DATABASE_USERNAME -Dspring.datasource.password=$DATABASE_PASSWORD
